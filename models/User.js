@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 /* 스키마 생성 */
 const userSchema = mongoose.Schema({
@@ -32,6 +34,24 @@ const userSchema = mongoose.Schema({
   tokenExp: {
     type: Number,
   },
+});
+
+userSchema.pre("save", function (next) {
+  let user = this;
+
+  // Password encryption
+  if (user.isModified("password")) {
+    bcrypt.genSalt(saltRounds, (err, salt) => {
+      if (err) return next(err);
+      bcrypt.hash(user.password, salt, (err, hash) => {
+        if (err) return next(err);
+        user.password = hash;
+        next();
+      });
+    });
+  } else {
+    next();
+  }
 });
 
 /* User 모델 생성 */

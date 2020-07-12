@@ -24,7 +24,7 @@ mongoose
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(err));
 
-app.get("/", (req, res) => res.send("2020년 7월 12일 오후 2시"));
+app.get("/", (req, res) => res.send("hello"));
 
 app.post("/register", (req, res) => {
   // 회원 가입에 필요한 정보들을 client에서 가져와 DB에 넣어준다.
