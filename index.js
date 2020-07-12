@@ -3,6 +3,8 @@ const app = express();
 const port = 8080;
 const bodyParser = require("body-parser");
 
+const config = require("./config/key");
+
 // application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 // application/json
@@ -13,15 +15,12 @@ const { User } = require("./models/User");
 /* DB 연결 */
 const mongoose = require("mongoose");
 mongoose
-  .connect(
-    "mongodb+srv://jaemin:dlwoals0307@basicnode.zawmr.mongodb.net/basicnode?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    }
-  )
+  .connect(config.mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(err));
 
