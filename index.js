@@ -3,16 +3,15 @@ const app = express();
 const port = 8080;
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-
 const config = require("./config/key");
+const { auth } = require("./middleware/auth");
+const { User } = require("./models/User");
 
 // application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 // application/json
 app.use(bodyParser.json());
 app.use(cookieParser());
-
-const { User } = require("./models/User");
 
 /* DB 연결 */
 const mongoose = require("mongoose");
@@ -30,7 +29,7 @@ mongoose
 
 app.get("/", (req, res) => res.send("hello"));
 
-app.post("/register", (req, res) => {
+app.post("/api/users/register", (req, res) => {
   // 회원 가입에 필요한 정보들을 client에서 가져와 DB에 넣어준다.
   const user = new User(req.body);
 
@@ -42,7 +41,7 @@ app.post("/register", (req, res) => {
   });
 });
 
-app.post("/login", (req, res) => {
+app.post("/api/users/login", (req, res) => {
   // 요청된 이메일을 DB에 있는지 찾는다.
   User.findOne({ email: req.body.email }, (err, user) => {
     // 제공된 이메일에 해당하는 유저가 없다면
@@ -71,6 +70,21 @@ app.post("/login", (req, res) => {
         });
       });
     });
+  });
+});
+
+// role 0 -> 일반 유저, 1 -> 관리자
+app.get("/api/users/auth", auth, (req, res) => {
+  // 여기까지 미들웨어롤 통과해 왔다는 얘기는 Authentication 이 True 라는 말.
+  res.status(200).json({
+    _id: req.user._id,
+    isAdmin: req.user.role === 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    role: req.user.role,
+    image: req.user.image,
   });
 });
 
