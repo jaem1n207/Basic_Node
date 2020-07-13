@@ -24,6 +24,8 @@ mongoose
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(err));
 
+/* Route */
+
 app.get("/", (req, res) => res.send("hello"));
 
 app.post("/register", (req, res) => {
@@ -35,6 +37,29 @@ app.post("/register", (req, res) => {
     return res.status(200).json({
       success: true,
     });
+  });
+});
+
+app.post("/login", (req, res) => {
+  // 요청된 이메일을 DB에 있는지 찾는다.
+  User.findOne({ email: req.body.email }, (err, userInfo) => {
+    // 제공된 이메일에 해당하는 유저가 없다면
+    if (!userInfo) {
+      return res.json({
+        loginSuccess: false,
+        message: "제공된 이메일에 해당하는 유저가 없습니다.",
+      });
+    }
+  });
+
+  // 요청된 이메일이 DB에 있다면 비밀번호가 일치하는지 확인.
+  user.comparePassword(req.body.password, (err, isMatch) => {
+    if (!isMatch)
+      return res.json({
+        loginSuccess: false,
+        message: "비밀번호가 일치하지 않습니다.",
+      });
+    // 비밀번호가 일치한다면 토큰을 생성한다.
   });
 });
 
