@@ -26,11 +26,18 @@ mongoose
   .catch((err) => console.log(err));
 
 /* Route */
-
 app.get("/", (req, res) => res.send("hello"));
 
 app.get("/api/hello", (req, res) => {
   res.send("Hello Landing Page");
+});
+
+app.get("/api/data", (req, res) => {
+  const data = {
+    lastname: "lee",
+    firstname: "jaemin",
+  };
+  res.json(data);
 });
 
 app.post("/api/users/register", (req, res) => {
