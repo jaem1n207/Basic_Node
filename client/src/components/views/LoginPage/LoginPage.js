@@ -1,25 +1,59 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { loginUser } from "_actions/user_action";
 
-function LoginPage() {
-  const [data, setData] = useState({});
+function LoginPage(props) {
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    axios.get("/api/data").then((res) => {
-      console.log(res);
-      console.log("response data: ", res.data);
-      setData(res.data);
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+
+  const onEmailHandler = (e) => {
+    setemail(e.currentTarget.value);
+  };
+  const onPasswordHandler = (e) => {
+    setpassword(e.currentTarget.value);
+  };
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+
+    let body = {
+      email: email,
+      password: password,
+    };
+
+    dispatch(loginUser(body)).then((res) => {
+      if (res.payload.loginSuccess) {
+        props.history.push("/");
+      } else {
+        alert("Error");
+      }
     });
-  }, []);
-  console.log("data: ", data);
+  };
 
   return (
-    <div>
-      <p>Login Page</p>
-      <div>
-        <p>{data.lastname}</p>
-        <p>{data.firstname}</p>
-      </div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100vh",
+      }}
+    >
+      <form
+        style={{ display: "flex", flexDirection: "column" }}
+        onSubmit={onSubmitHandler}
+      >
+        <label>Email</label>
+        <input type="email" value={email} onChange={onEmailHandler} />
+        <label>Password</label>
+        <input type="password" value={password} onChange={onPasswordHandler} />
+
+        <br />
+        <button>Login</button>
+      </form>
     </div>
   );
 }
