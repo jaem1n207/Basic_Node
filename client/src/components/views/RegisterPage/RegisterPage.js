@@ -1,6 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "_actions/user_action";
+import { withRouter } from "react-router-dom";
+import { Form, Input, Button } from "antd";
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 8 },
+    sm: { span: 8 },
+  },
+};
 
 function RegisterPage(props) {
   const dispatch = useDispatch();
@@ -37,7 +50,11 @@ function RegisterPage(props) {
     };
 
     dispatch(registerUser(body)).then((res) => {
+      console.log(res.data);
       if (res.payload.success) {
+        setemail("");
+        setname("");
+        setpassword("");
         props.history.push("/login");
       } else {
         alert("회원가입에 실패하였습니다.");
@@ -55,8 +72,9 @@ function RegisterPage(props) {
         height: "100vh",
       }}
     >
-      <form
-        style={{ display: "flex", flexDirection: "column" }}
+      <Form
+        style={{ minWidth: "375px" }}
+        {...formItemLayout}
         onSubmit={onSubmitHandler}
       >
         <label>Email</label>
@@ -77,9 +95,9 @@ function RegisterPage(props) {
 
         <br />
         <button>회원 가입</button>
-      </form>
+      </Form>
     </div>
   );
 }
 
-export default RegisterPage;
+export default withRouter(RegisterPage);

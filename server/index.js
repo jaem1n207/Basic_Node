@@ -28,10 +28,6 @@ mongoose
 /* Route */
 app.get("/", (req, res) => res.send("hello"));
 
-app.get("/api/hello", (req, res) => {
-  res.send("Hello Landing Page");
-});
-
 app.post("/api/users/register", (req, res) => {
   // 회원 가입에 필요한 정보들을 client에서 가져와 DB에 넣어준다.
   const user = new User(req.body);
