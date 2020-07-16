@@ -10,8 +10,20 @@ const formItemLayout = {
     sm: { span: 8 },
   },
   wrapperCol: {
-    xs: { span: 8 },
-    sm: { span: 8 },
+    xs: { span: 24 },
+    sm: { span: 12 },
+  },
+};
+const tailFormItemlayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 16,
+      offset: 8,
+    },
   },
 };
 
@@ -62,6 +74,15 @@ function RegisterPage(props) {
     });
   };
 
+  const onReset = (e) => {
+    e.preventDefault();
+
+    setemail("");
+    setname("");
+    setpassword("");
+    setconfirmPassword("");
+  };
+
   return (
     <div
       style={{
@@ -77,24 +98,84 @@ function RegisterPage(props) {
         {...formItemLayout}
         onSubmit={onSubmitHandler}
       >
-        <label>Email</label>
-        <input type="email" value={email} onChange={onEmailHandler} />
+        <Form.Item
+          label="Name"
+          rules={[
+            {
+              required: true,
+              message: "Please input your name!",
+            },
+          ]}
+        >
+          <Input
+            id="name"
+            placeholder="Input your Name"
+            type="text"
+            value={name}
+            onChange={onNameHandler}
+          />
+        </Form.Item>
 
-        <label>Name</label>
-        <input type="text" value={name} onChange={onNameHandler} />
+        <Form.Item
+          label="Email"
+          rules={[
+            {
+              required: true,
+              message: "Please input your email!",
+            },
+          ]}
+        >
+          <Input
+            id="email"
+            placeholder="Input your Email"
+            type="email"
+            value={email}
+            onChange={onEmailHandler}
+          />
+        </Form.Item>
 
-        <label>Password</label>
-        <input type="password" value={password} onChange={onPasswordHandler} />
+        <Form.Item
+          label="Password"
+          rules={[
+            {
+              required: true,
+              message: "Please input your password!",
+            },
+          ]}
+        >
+          <Input
+            id="password"
+            placeholder="Input your Password"
+            type="password"
+            value={password}
+            onChange={onPasswordHandler}
+          />
+        </Form.Item>
 
-        <label>Confirm Password</label>
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={onConfirmPasswordHandler}
-        />
+        <Form.Item
+          label="ConfirmPassword"
+          rules={[
+            {
+              required: true,
+              message: "Please input your password!",
+            },
+          ]}
+        >
+          <Input
+            id="confirmPassword"
+            placeholder="Input your Password again"
+            type="password"
+            value={confirmPassword}
+            onChange={onConfirmPasswordHandler}
+          />
+        </Form.Item>
 
-        <br />
-        <button>회원 가입</button>
+        <Form.Item {...tailFormItemlayout}>
+          <Button type="primary" onClick={onSubmitHandler}>
+            Sign Up
+          </Button>
+          <Button onClick={onReset}>Reset</Button>
+        </Form.Item>
       </Form>
     </div>
   );

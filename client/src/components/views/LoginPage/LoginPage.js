@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser } from "_actions/user_action";
 import { withRouter } from "react-router-dom";
+import { Form, Input, Button, Checkbox } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import "./LoginPage.css";
 
 function LoginPage(props) {
   const dispatch = useDispatch();
@@ -35,6 +38,12 @@ function LoginPage(props) {
     });
   };
 
+  const moveRegisterHandler = (e) => {
+    e.preventDefault();
+
+    props.history.push("/register");
+  };
+
   return (
     <div
       style={{
@@ -45,18 +54,75 @@ function LoginPage(props) {
         height: "100vh",
       }}
     >
-      <form
-        style={{ display: "flex", flexDirection: "column" }}
-        onSubmit={onSubmitHandler}
+      <Form
+        name="normal_login"
+        className="login-form"
+        initialValues={{
+          remember: true,
+        }}
       >
-        <label>Email</label>
-        <input type="email" value={email} onChange={onEmailHandler} />
-        <label>Password</label>
-        <input type="password" value={password} onChange={onPasswordHandler} />
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: "Please input your email!",
+            },
+          ]}
+        >
+          <Input
+            type="email"
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Email"
+            value={email}
+            onChange={onEmailHandler}
+          />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: "Please input your Password!",
+            },
+          ]}
+        >
+          <Input
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            value={password}
+            onChange={onPasswordHandler}
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Item>
 
-        <br />
-        <button>Login</button>
-      </form>
+        <Form.Item>
+          <Form.Item name="remember" valuePropName="checked" noStyle>
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+
+          <a className="login-form-forgot" href="">
+            Forgot password
+          </a>
+        </Form.Item>
+
+        <Form.Item className="login-form-wrap">
+          <Button
+            type="primary"
+            onClick={onSubmitHandler}
+            className="login-form-Submit-button"
+          >
+            Log in
+          </Button>
+          <Button
+            onClick={moveRegisterHandler}
+            className="login-form-Register-button"
+          >
+            {" "}
+            Register Now!
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 }
