@@ -2,16 +2,25 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "_actions/user_action";
 import { withRouter } from "react-router-dom";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Tooltip, Alert } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 
 const formItemLayout = {
   labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
+    xs: {
+      span: 24,
+    },
+    sm: {
+      span: 8,
+    },
   },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 12 },
+    xs: {
+      span: 24,
+    },
+    sm: {
+      span: 16,
+    },
   },
 };
 const tailFormItemlayout = {
@@ -48,11 +57,27 @@ function RegisterPage(props) {
     setconfirmPassword(e.currentTarget.value);
   };
 
+  const pressEnter = (e) => {
+    if (e.key === "Enter") {
+      console.log("success");
+      onSubmitHandler();
+    } else {
+      console.log("fail");
+    }
+  };
+
   const onSubmitHandler = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     if (password !== confirmPassword) {
-      return alert("비밀번호가 일치하지 않습니다.");
+      return (
+        <Alert
+          message="Pssword Error!"
+          description="비밀번호가 일치하지 않습니다."
+          type="error"
+          showIcon
+        />
+      );
     }
 
     let body = {
@@ -69,7 +94,14 @@ function RegisterPage(props) {
         setpassword("");
         props.history.push("/login");
       } else {
-        alert("회원가입에 실패하였습니다.");
+        return (
+          <Alert
+            message="Pssword Error!"
+            description="비밀번호는 5자 이상으로 해야 합니다!"
+            type="error"
+            showIcon
+          />
+        );
       }
     });
   };
@@ -94,79 +126,115 @@ function RegisterPage(props) {
       }}
     >
       <Form
-        style={{ minWidth: "375px" }}
         {...formItemLayout}
-        onSubmit={onSubmitHandler}
+        name="register"
+        style={{ minWidth: "480px" }}
+        scrollToFirstError
       >
         <Form.Item
-          label="Name"
+          name="email"
+          label="E-mail"
+          rules={[
+            {
+              type: "email",
+              message: "The input is not valid E-mail!",
+            },
+            {
+              required: true,
+              message: "Please input your E-mail!",
+            },
+          ]}
+        >
+          <Input
+            type="email"
+            placeholder="abc123@naver.com"
+            value={email}
+            onChange={onEmailHandler}
+            onKeyDown={pressEnter}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="password"
+          label={
+            <span>
+              Password&nbsp;
+              <Tooltip title="Please enter at least 5 characters of password.">
+                <QuestionCircleOutlined />
+              </Tooltip>
+            </span>
+          }
+          rules={[
+            {
+              required: true,
+              message: "Please input your password!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input.Password
+            placeholder="Password"
+            value={password}
+            onChange={onPasswordHandler}
+            onKeyDown={pressEnter}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="confirm"
+          label="Confirm Password"
+          dependencies={["password"]}
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Please confirm your password!",
+            },
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject(
+                  "The two passwords that you entered do not match!"
+                );
+              },
+            }),
+          ]}
+        >
+          <Input.Password
+            placeholder="ConfirmPassword"
+            value={confirmPassword}
+            onChange={onConfirmPasswordHandler}
+            onKeyDown={pressEnter}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="Name"
+          label={
+            <span>
+              Name&nbsp;
+              <Tooltip title="What's your name?">
+                <QuestionCircleOutlined />
+              </Tooltip>
+            </span>
+          }
           rules={[
             {
               required: true,
               message: "Please input your name!",
+              whitespace: true,
             },
           ]}
         >
           <Input
-            id="name"
-            placeholder="Input your Name"
             type="text"
+            placeholder="Tom"
             value={name}
             onChange={onNameHandler}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Email"
-          rules={[
-            {
-              required: true,
-              message: "Please input your email!",
-            },
-          ]}
-        >
-          <Input
-            id="email"
-            placeholder="Input your Email"
-            type="email"
-            value={email}
-            onChange={onEmailHandler}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Password"
-          rules={[
-            {
-              required: true,
-              message: "Please input your password!",
-            },
-          ]}
-        >
-          <Input
-            id="password"
-            placeholder="Input your Password"
-            type="password"
-            value={password}
-            onChange={onPasswordHandler}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="ConfirmPassword"
-          rules={[
-            {
-              required: true,
-              message: "Please input your password!",
-            },
-          ]}
-        >
-          <Input
-            id="confirmPassword"
-            placeholder="Input your Password again"
-            type="password"
-            value={confirmPassword}
-            onChange={onConfirmPasswordHandler}
+            onKeyDown={pressEnter}
           />
         </Form.Item>
 

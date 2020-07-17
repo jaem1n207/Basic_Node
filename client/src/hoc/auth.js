@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { auth } from "_actions/user_action";
+import HeaderCom from "components/views/Header/HeaderCom";
 
 export default function (SpecificComponent, option, adminRoute = null) {
   /* 
@@ -17,7 +18,7 @@ export default function (SpecificComponent, option, adminRoute = null) {
     useEffect(() => {
       //To know my current status, send Auth request
       dispatch(auth()).then((res) => {
-        console.log(res);
+        console.log(res.payload);
 
         // 로그인 하지 않은 상태
         if (!res.payload.isAuth) {

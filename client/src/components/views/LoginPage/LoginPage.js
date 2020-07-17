@@ -19,8 +19,14 @@ function LoginPage(props) {
     setpassword(e.currentTarget.value);
   };
 
+  const pressEnter = (e) => {
+    if (e.key === "Enter") {
+      onSubmitHandler();
+    }
+  };
+
   const onSubmitHandler = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     let body = {
       email: email,
@@ -76,6 +82,7 @@ function LoginPage(props) {
             placeholder="Email"
             value={email}
             onChange={onEmailHandler}
+            onKeyPress={pressEnter}
           />
         </Form.Item>
         <Form.Item
@@ -87,12 +94,12 @@ function LoginPage(props) {
             },
           ]}
         >
-          <Input
+          <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
             value={password}
             onChange={onPasswordHandler}
-            type="password"
             placeholder="Password"
+            onKeyPress={pressEnter}
           />
         </Form.Item>
 

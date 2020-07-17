@@ -9,6 +9,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import promiseMiddleware from "redux-promise";
 import ReduxThunk from "redux-thunk";
 import Reducer from "_reducers";
+import "./index.css";
 
 const middlewares = [ReduxThunk, promiseMiddleware];
 const createStoreWithMiddleware = createStore(
