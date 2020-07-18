@@ -16,3 +16,7 @@
 * React
 * Redux
 * antd
+
+## Function
+* Sign Up & Log in
+* Auth HOC
